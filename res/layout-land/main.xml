@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:orientation="vertical"  
+    android:layout_height="fill_parent"
+    android:background="@drawable/white"
+    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/white"
+    >   
+      <TextView
+    android:gravity="center"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="2px"
+    android:paddingBottom="1px"
+    android:textSize="18px"
+    android:textStyle="bold"    
+    android:text="@string/label" />
+<TextView
+    android:gravity="left"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@drawable/black"
+    android:paddingTop="1px"
+    android:paddingLeft="6px"
+    android:paddingBottom="6px"
+    android:text="@string/message" />
+    <EditText 
+				android:id="@+id/msg"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:minHeight="80dp">
+			</EditText>
+			<TextView
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:textSize="2pt" />
+           <Button          
+          android:id="@+id/send_button"
+          android:layout_marginLeft="100px"
+          android:textSize="16px"          
+          android:layout_width="300dp"
+          android:layout_height="wrap_content" 
+          android:padding="20px" />
+</LinearLayout>
+</ScrollView>
