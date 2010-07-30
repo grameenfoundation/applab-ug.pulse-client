@@ -15,94 +15,88 @@ package yo.applab.pulse;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class Settings extends PreferenceActivity implements
-		OnSharedPreferenceChangeListener {
-	public static String KEY_SERVER = "server";
-	public static final int DONE_ID = Menu.FIRST;
+public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+    public static String KEY_SERVER = "server";
+    public static final int DONE_ID = Menu.FIRST;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
-		setTitle("Settings");
-		updateServer(KEY_SERVER);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preferences);
+        setTitle("Settings");
+        updateServer(KEY_SERVER);
+    }
 
-	private void updateServer(String key) {
-		EditTextPreference etp = (EditTextPreference) this
-				.getPreferenceScreen().findPreference(key);
-		String s = etp.getText();
-		s = s.trim();
-		if (isValidUrl(s)) {
+    private void updateServer(String key) {
+        EditTextPreference etp = (EditTextPreference)this.getPreferenceScreen().findPreference(key);
+        String s = etp.getText();
+        s = s.trim();
+        if (isValidUrl(s)) {
 
-			etp.setText(s);
-			etp.setSummary(s);
+            etp.setText(s);
+            etp.setSummary(s);
 
-			Global.server_url = s;
-		} else {
-			etp.setText((String) etp.getSummary());
-			Toast.makeText(getApplicationContext(), "Sorry, invalid URL!",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
+            Global.server_url = s;
+        }
+        else {
+            etp.setText((String)etp.getSummary());
+            Toast.makeText(getApplicationContext(), "Sorry, invalid URL!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		updateServer(KEY_SERVER);
-	}
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        updateServer(KEY_SERVER);
+    }
 
-	private static boolean isValidUrl(String url) {
+    private static boolean isValidUrl(String url) {
 
-		try {
-			new URL(url);
-			return true;
-		} catch (MalformedURLException e) {
-			return false;
-		}
-	}
+        try {
+            new URL(url);
+            return true;
+        }
+        catch (MalformedURLException e) {
+            return false;
+        }
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		boolean result = super.onCreateOptionsMenu(menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean result = super.onCreateOptionsMenu(menu);
 
-		menu.add(0, DONE_ID, 0, "Done").setIcon(R.drawable.done); // TODO add to
-																	// strings.xml
-		return result;
-	}
+        menu.add(0, DONE_ID, 0, "Done").setIcon(R.drawable.done); // TODO add to
+        // strings.xml
+        return result;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
 
-		case DONE_ID:
-			finish();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+            case DONE_ID:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		getPreferenceScreen().getSharedPreferences()
-				.unregisterOnSharedPreferenceChangeListener(this);
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		getPreferenceScreen().getSharedPreferences()
-				.registerOnSharedPreferenceChangeListener(this);
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
 }

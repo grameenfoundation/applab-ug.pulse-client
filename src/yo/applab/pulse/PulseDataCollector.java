@@ -57,7 +57,7 @@ public class PulseDataCollector {
 	public void backgroundRefresh() {
 		Thread refreshThread = new Thread() {
 			public void run() {
-				String base = Global.server_url + "?handset_id=" + Global.IMEI + "&request=";
+				String base = Global.server_url + "?handset_id=" + Global.getImei(null) + "&request=";
 				HtmlLoader loader = new HtmlLoader();
 
 				for (int i = 0; i < tabs.size(); i++) {
