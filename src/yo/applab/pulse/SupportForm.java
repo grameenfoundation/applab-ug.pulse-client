@@ -94,6 +94,7 @@ public class SupportForm extends Activity {
                 if (edit.length() > 0) {
                     try {
                         postData();
+                        editText.setText("");
                     }
                     catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
