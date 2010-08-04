@@ -44,8 +44,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
             etp.setText(s);
             etp.setSummary(s);
+            
+            if (!s.endsWith("/")) {
+                s = s.concat("/");
+            }
 
-            Global.server_url = s;
+            Global.server_url = s.concat(getString(R.string.server_path1));
         }
         else {
             etp.setText((String)etp.getSummary());

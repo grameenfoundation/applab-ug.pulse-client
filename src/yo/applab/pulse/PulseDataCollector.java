@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.os.Handler;
+import android.util.Log;
 
 public class PulseDataCollector {
-
+	private final String TAG = "PulseDataCollector";
 	private List<TabInfo> tabs;
 	private Handler handler;
 	private Timer timer;
@@ -58,6 +59,7 @@ public class PulseDataCollector {
 		Thread refreshThread = new Thread() {
 			public void run() {
 				String base = Global.server_url + "?handset_id=" + Global.getImei(null) + "&request=";
+				Log.i(TAG, "Server Base Url: " + base);
 				HtmlLoader loader = new HtmlLoader();
 
 				for (int i = 0; i < tabs.size(); i++) {
@@ -66,6 +68,7 @@ public class PulseDataCollector {
 					if (tabInfo.supportsRefresh) { 
 						try {
 							URI uri = new URI(base + tabInfo.tag);
+							Log.i(TAG, "Tab: " + tabInfo.tag + ", Url:" + uri.toString());
 							String newTabData = loader.fetchContent(uri);
 							if (newTabData != null) {
 								// If the data update succeeds, use the new data.
