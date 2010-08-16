@@ -1,4 +1,4 @@
-package yo.applab.pulse;
+package applab.pulse.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -6,8 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import android.os.Handler;
 import android.util.Log;
+import applab.client.Handset;
 
 public class PulseDataCollector {
 	private final String TAG = "PulseDataCollector";
@@ -58,7 +60,7 @@ public class PulseDataCollector {
 	public void backgroundRefresh() {
 		Thread refreshThread = new Thread() {
 			public void run() {
-				String base = Global.server_url + "?handset_id=" + Global.getImei(null) + "&request=";
+				String base = Global.server_url + "?handset_id=" + Handset.getImei() + "&request=";
 				Log.i(TAG, "Server Base Url: " + base);
 				HtmlLoader loader = new HtmlLoader();
 

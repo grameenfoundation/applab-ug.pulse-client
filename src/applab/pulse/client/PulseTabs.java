@@ -10,7 +10,7 @@ License for the specific language governing permissions and limitations under
 the License.
  */
 
-package yo.applab.pulse;
+package applab.pulse.client;
 
 import java.util.List;
 
@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +33,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import applab.client.Handset;
 
 public class PulseTabs extends TabActivity {
     private final String TAG = "PulseTabs";
@@ -45,6 +45,10 @@ public class PulseTabs extends TabActivity {
     private static final int EXIT_ID = Menu.FIRST + 3;
     private PulseDataCollector dataCollector;
     private List<TabInfo> tabList;
+
+    public PulseTabs() {
+        super();
+    }
 
     /**
      * Runs when the application is launched.
@@ -65,8 +69,8 @@ public class PulseTabs extends TabActivity {
         TabHost tabHost = this.getTabHost();
         LayoutInflater.from(this).inflate(R.layout.tabs, tabHost.getTabContentView(), true);
 
-        // populate IMEI setting
-        Global.getImei(this);
+        // populate IMEI setting (TODO: we need a TabActivity subclass to handle this in applab.client)
+        Handset.getImei(this);
 
         // populate global server URL
         getServerUrl();

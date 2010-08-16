@@ -1,4 +1,4 @@
-package yo.applab.pulse;
+package applab.pulse.client;
 
 public class TabInfo {
 

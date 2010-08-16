@@ -10,7 +10,7 @@ License for the specific language governing permissions and limitations under
 the License.
  */
 
-package yo.applab.pulse;
+package applab.pulse.client;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,7 +26,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -41,8 +40,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import applab.client.*;
 
-public class SupportForm extends Activity {
+public class SupportForm extends ApplabActivity {
     public static final int ABOUT_ID = Menu.FIRST;
     public static final int EXIT_ID = Menu.FIRST + 2;
     public static final int SETTINGS_ID = Menu.FIRST + 1;
@@ -79,6 +79,10 @@ public class SupportForm extends Activity {
             }
         }
     };
+    
+    public SupportForm() {
+        super();
+    }
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -112,7 +116,6 @@ public class SupportForm extends Activity {
     }
 
     private String getUrl() throws UnsupportedEncodingException {
-        String imei = Global.getImei(this);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String url = settings.getString(Settings.KEY_SERVER, getString(R.string.default_server));
         if (url.endsWith("/")) {
@@ -123,7 +126,7 @@ public class SupportForm extends Activity {
         }
 
         edit = URLEncoder.encode(edit, "UTF-8");
-        url = url.concat("?handset_id=" + imei + "&message=" + edit);
+        url = url.concat("?handset_id=" + Handset.getImei() + "&message=" + edit);
         return url;
     }
 

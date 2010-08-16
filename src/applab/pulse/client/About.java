@@ -12,21 +12,25 @@
  * the License.
  */
 
-package yo.applab.pulse;
+package applab.pulse.client;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import applab.client.*;
 
-public class About extends Activity {
+public class About extends ApplabActivity {
     private TextView applicationNameAndVersion;
     private TextView releaseDate;
     private TextView phoneId;
     private TextView organizationContactInformation;
     private Button closeButton;
+
+    public About() {
+        super();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,7 @@ public class About extends Activity {
 
         // Get the phone ID (i.e. IMEI number)
         this.phoneId = (TextView)findViewById(R.id.phone_id);
-        this.phoneId.setText("Phone ID: " + Global.getImei(this));
+        this.phoneId.setText("Phone ID: " + Handset.getImei());
 
         this.organizationContactInformation = (TextView)findViewById(R.id.info);
         this.organizationContactInformation.setText(getString(R.string.info));
