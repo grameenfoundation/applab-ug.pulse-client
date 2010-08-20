@@ -1,6 +1,6 @@
 package applab.client;
 
-import android.app.Activity;
+import android.app.TabActivity;
 import android.os.Bundle;
 
 /**
@@ -11,19 +11,14 @@ import android.os.Bundle;
  * base class to provide shared logic at the application-scope
  *
  */
-public abstract class ApplabActivity extends Activity {
-    protected ApplabActivity() {
+public abstract class ApplabTabActivity extends TabActivity {
+    protected ApplabTabActivity() {
         super();
-        ApplabActivity.initialize(this);
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ApplabActivity.initialize(this);
-    }
-    
-    static void initialize(Activity activity) {
-        Handset.initializeImei(activity);    	
-    }
+    }    
 }

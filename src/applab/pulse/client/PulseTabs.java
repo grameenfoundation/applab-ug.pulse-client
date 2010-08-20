@@ -16,7 +16,6 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,9 +32,9 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import applab.client.Handset;
+import applab.client.*;
 
-public class PulseTabs extends TabActivity {
+public class PulseTabs extends ApplabTabActivity {
     private final String TAG = "PulseTabs";
     private Locate locate;
     private static final int PROGRESS_DIALOG = 1;
@@ -65,15 +64,12 @@ public class PulseTabs extends TabActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // populate global server URL
+        getServerUrl();
+
         this.dataCollector = new PulseDataCollector(handler);
         TabHost tabHost = this.getTabHost();
         LayoutInflater.from(this).inflate(R.layout.tabs, tabHost.getTabContentView(), true);
-
-        // populate IMEI setting (TODO: we need a TabActivity subclass to handle this in applab.client)
-        Handset.getImei(this);
-
-        // populate global server URL
-        getServerUrl();
 
         // create Locate object
         this.locate = new Locate((LocationManager)getSystemService(Context.LOCATION_SERVICE));
