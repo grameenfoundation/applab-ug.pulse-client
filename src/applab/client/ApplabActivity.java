@@ -18,7 +18,7 @@ public abstract class ApplabActivity extends Activity {
     }
     
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ApplabActivity.initialize(this);
     }
