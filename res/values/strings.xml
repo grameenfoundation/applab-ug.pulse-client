@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pulse</string>
-    <string name="app_version">2.7</string>
-    <string name="release_date">August 06, 2010</string>
+    <string name="app_version">2.7.1</string>
+    <string name="release_date">August 23, 2010</string>
 	<string name="info">Grameen Foundation, Applab Uganda\nckw@applab.org</string>
     <string name="label">Welcome</string>
     <string name="tab1">Messages</string>

@@ -4,26 +4,31 @@
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
-<project basedir="." default="build" name="pulse">
+<project basedir="." default="build" name="pulse.client">
     <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="D:/Software/eclipse-java-ganymede-SR1-win32/eclipse"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
     <path id="Android 1.5.libraryclasspath">
-        <pathelement location="D:/Software/android-sdk_r04-windows/android-sdk-windows/platforms/android-3/android.jar"/>
+        <pathelement location="../../Downloads/android-sdk_r05-windows/android-sdk-windows/platforms/android-3/android.jar"/>
     </path>
-    <path id="pulse.classpath">
+    <path id="pulse.client.classpath">
         <pathelement location="bin"/>
         <path refid="Android 1.5.libraryclasspath"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src" excludes="**/*.launch, **/*.java"/>
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
         </copy>
         <copy includeemptydirs="false" todir="bin">
-            <fileset dir="gen" excludes="**/*.launch, **/*.java"/>
+            <fileset dir="gen">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
         </copy>
     </target>
     <target name="clean">
@@ -36,11 +41,11 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
             <src path="src"/>
-            <classpath refid="pulse.classpath"/>
+            <classpath refid="pulse.client.classpath"/>
         </javac>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
             <src path="gen"/>
-            <classpath refid="pulse.classpath"/>
+            <classpath refid="pulse.client.classpath"/>
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
