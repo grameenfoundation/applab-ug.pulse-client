@@ -5,10 +5,6 @@
     <string name="release_date">August 23, 2010</string>
 	<string name="info">Grameen Foundation, Applab Uganda\nckw@applab.org</string>
     <string name="label">Welcome</string>
-    <string name="tab1">Messages</string>
-    <string name="tab2">Performance</string>
-    <string name="tab3">Support</string>
-    <string name="tab4">Profile</string>
     <string name="send">Send</string>
     <string name="empty_msg">Please enter a message</string>
     <string name="close_button">Close</string>
@@ -16,8 +12,6 @@
     <string name="select_type">Select message type:</string>
     <string name="server_url">Server URL</string>
     <string name="default_server">http://ckwapps.applab.org:8888</string>   
-    <string name="server_path1">Mobile-Pulse/download</string>
-    <string name="server_path2">Mobile-Pulse/pulse</string>
     <string name="loading">Please wait...</string>
     <string name="downloading_data">Downloading Content</string>
     <string name="cancel">Cancel</string>

@@ -1,23 +1,35 @@
 package applab.pulse.client;
 
 public class TabInfo {
+    private String content;
+    private String contentHash;
+    private String name;
 
-	public String tag;
-	public int indicator;
-	public int contentID;
-	public String storedTabData; 
-	public boolean supportsRefresh;
+    public TabInfo(String name, String contentHash) {
+        this.name = name;
+        this.contentHash = contentHash;
+        this.content = "";
+    }
 
-	public TabInfo(String tag, int indicator, int contentID) {
-		new TabInfo(tag, indicator, contentID, true);
-	}
-	
-	public TabInfo(String tag, int indicator, int contentID, boolean supportsRefresh) {
-		this.tag = tag;
-		this.indicator = indicator;
-		this.contentID = contentID;
-		this.storedTabData = null;
-		this.supportsRefresh = supportsRefresh;
-	}
-	
+    /**
+     * Get the name of the tab (to show as the "indicator")
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    public String getContentHash() {
+        return this.contentHash;
+    }
+
+    /**
+     * return the HTML content associated with this tab
+     */
+    public String getContent() {
+        return this.content;
+    }
+
+    public void appendContent(String additionalContent) {
+        this.content += additionalContent;
+    }
 }

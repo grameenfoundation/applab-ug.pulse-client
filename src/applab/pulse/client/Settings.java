@@ -23,33 +23,38 @@ import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import applab.client.PropertyStorage;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     public static String KEY_SERVER = "server";
     public static final int DONE_ID = Menu.FIRST;
+    private static String cachedServerUrl;
+    private static final String defaultServer = "http://ckwapps.applab.org:8888";
 
+    public static String getServerUrl() {
+        if (cachedServerUrl == null) {
+            cachedServerUrl = PropertyStorage.getLocal().getValue(KEY_SERVER, defaultServer);
+        }
+
+        return cachedServerUrl;
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         setTitle("Settings");
-        updateServer(KEY_SERVER);
+        refreshSetting();
     }
 
-    private void updateServer(String key) {
-        EditTextPreference etp = (EditTextPreference)this.getPreferenceScreen().findPreference(key);
-        String s = etp.getText();
-        s = s.trim();
-        if (isValidUrl(s)) {
-
-            etp.setText(s);
-            etp.setSummary(s);
-            
-            if (!s.endsWith("/")) {
-                s = s.concat("/");
-            }
-
-            Global.server_url = s.concat(getString(R.string.server_path1));
+    private void refreshSetting() {
+        EditTextPreference etp = (EditTextPreference)this.getPreferenceScreen().findPreference(KEY_SERVER);
+        String textContents = etp.getText().trim();
+        if (isValidUrl(textContents)) {
+            etp.setText(textContents);
+            etp.setSummary(textContents);
+            PropertyStorage.getLocal().setValue(KEY_SERVER, textContents);
+            cachedServerUrl = textContents;
         }
         else {
             etp.setText((String)etp.getSummary());
@@ -58,7 +63,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updateServer(KEY_SERVER);
+        refreshSetting();
     }
 
     private static boolean isValidUrl(String url) {

@@ -11,32 +11,7 @@ the License.
  */
 package applab.pulse.client;
 
-import android.app.Activity;
-import android.content.Context;
-import android.telephony.TelephonyManager;
-
 public class Global {
     /** Network connection and read timeout **/
     public static final int TIMEOUT = 30000;
-    public static String server_url;
-    public static boolean cancel;
-    public static boolean refresh;
-    public static final String errorHtml = "<html>" + "<body>" + "<h1>Unable to establish a connection</h1>"
-            + "<p><strong>Please try again later.</strong></p>" + "</body>" + "</html>";
-
-    static String cachedImei;
-
-    // TODO: move this into our shared client library call that runs on initialization 
-    /**
-     * Gets the IMEI from the phone and stores it; we need this to construct the
-     * URL for server requests.
-     */
-    public static String getImei(Activity activity) {
-        if (cachedImei == null && activity != null) {
-            TelephonyManager telephonyManager = (TelephonyManager)activity.getSystemService(Context.TELEPHONY_SERVICE);
-            cachedImei = telephonyManager.getDeviceId();
-        }
-        
-        return cachedImei;
-    }
 }
