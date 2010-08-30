@@ -12,7 +12,8 @@ the License.
 
 package applab.pulse.client;
 
-import java.util.List;
+import java.util.*;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,7 +26,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import applab.client.*;
@@ -104,16 +104,22 @@ public class MainWindow extends ApplabTabActivity {
         this.tabList = (List<TabInfo>)getLastNonConfigurationInstance();
 
         if (this.tabList == null) {
-            refreshTabData();
-            this.updateDisplayedTabs = true;
+            // TODO: check our local storage for tab information from the previous run
 
-            // workaround another android bug of the touch screen interacting with tab host before there are tabs
-            tabHost.setCurrentTab(0);
-            // displayTabs will get called from our asynchronous handler, and we always want to update the first time
+            refreshTabData();
+
+            // As a workaround for an android bug where the touch screen will crash the tab host if there are no tabs
+            // available, we setup a temporary tab.
+            this.tabList = new ArrayList<TabInfo>();
+            TabInfo errorTab = new TabInfo("Error", "");
+            errorTab.appendContent(MainWindow.errorHtml);
+            this.tabList.add(errorTab);
+
+            // displayTabs will get called from our asynchronous handler, and we always want to update our boilerplate
+            this.updateDisplayedTabs = true;
         }
-        else {
-            displayTabs();
-        }
+
+        displayTabs();
     }
 
     /**
@@ -126,23 +132,18 @@ public class MainWindow extends ApplabTabActivity {
 
         // TODO: we can be smarter about seeing if we have new tabs or just new content
         int currentTab = tabHost.getCurrentTab();
-        
+
         // Android has a bug where it will Null-ref if you don't call setCurrentTab(0) before clearAllTabs
         // http://code.google.com/p/android/issues/detail?id=2772
         tabHost.setCurrentTab(0);
         tabHost.clearAllTabs();
-        if (this.tabList != null) {
-            for (TabInfo tab : this.tabList) {
-                addBrowserTab(tabHost, tab.getName(), tab.getContent());
-            }
-            
-            // now reset the active tab
-            if (this.tabList.size() > currentTab) {
-                tabHost.setCurrentTab(currentTab);
-            }
+        for (TabInfo tab : this.tabList) {
+            addBrowserTab(tabHost, tab.getName(), tab.getContent());
         }
-        else {
-            addBrowserTab(tabHost, "Error", MainWindow.errorHtml);
+
+        // now reset the active tab
+        if (this.tabList.size() > currentTab) {
+            tabHost.setCurrentTab(currentTab);
         }
     }
 

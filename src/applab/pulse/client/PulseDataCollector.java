@@ -15,7 +15,6 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.os.Handler;
-import android.text.Html;
 
 public class PulseDataCollector {
     // constants used for signaling our handler
