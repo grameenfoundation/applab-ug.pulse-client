@@ -12,7 +12,8 @@ the License.
 
 package applab.pulse.client;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,13 +23,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import applab.client.*;
+import applab.client.ApplabTabActivity;
+import applab.client.BrowserActivity;
 
 /**
  * Activity that is displayed at startup time. This activity is responsible for dynamically determining the tabs to
@@ -39,18 +40,24 @@ public class MainWindow extends ApplabTabActivity {
     private static final String errorHtml = "<html><body>" + "<h1>Unable to establish a connection</h1>"
             + "<p><strong>Please try again later.</strong></p>" + "</body></html>";
 
-    private final String TAG = "PulseTabs";
-    private Locate locate;
     private static final int ABOUT_ID = Menu.FIRST;
     private static final int REFRESH_ID = Menu.FIRST + 1;
     private static final int SETTINGS_ID = Menu.FIRST + 2;
     private static final int EXIT_ID = Menu.FIRST + 3;
+
+    private Locate locate;
     private PulseDataCollector dataCollector;
-    private List<TabInfo> tabList;
+    private List<TabInfo> currentTabs;
     private ProgressDialog progressDialog;
 
-    // set to true if we need to update our displayed tabs in displayTabs
-    private boolean updateDisplayedTabs;
+    /**
+     * a global, increasing value that is appended to TabInfo tags in order to uniquely identify them over the course of
+     * process execution.
+     * 
+     * This is necessary because Android will sometimes skip a content refresh if a tag name is unchanged.
+     */
+    // uniquely identify them over the course of process execution
+    private static int currentTagVersion;
 
     public MainWindow() {
         super();
@@ -80,17 +87,12 @@ public class MainWindow extends ApplabTabActivity {
                     progressDialog = null;
                 }
 
-                // update our tab list if we've successfully updated the contents
-                if (message.what == PulseDataCollector.UPDATES_DETECTED) {
-                    tabList = dataCollector.getTabList();
-                    updateDisplayedTabs = true;
-                }
-
-                if (updateDisplayedTabs) {
-                    displayTabs();
-                }
-                updateDisplayedTabs = false;
                 locate.cancel();
+
+                // update our tab list if we've received new data from the server
+                if (message.what == PulseDataCollector.UPDATES_DETECTED) {
+                    updateTabs(dataCollector.getTabList());
+                }
             }
         });
         TabHost tabHost = this.getTabHost();
@@ -101,54 +103,100 @@ public class MainWindow extends ApplabTabActivity {
 
         // Get saved tab data in case there was a configuration (orientation)
         // change so we don't reload it from the network
-        this.tabList = (List<TabInfo>)getLastNonConfigurationInstance();
+        List<TabInfo> initialTabs = (List<TabInfo>)getLastNonConfigurationInstance();
 
-        if (this.tabList == null) {
+        if (initialTabs == null) {
             // TODO: check our local storage for tab information from the previous run
 
             refreshTabData();
 
             // As a workaround for an android bug where the touch screen will crash the tab host if there are no tabs
             // available, we setup a temporary tab.
-            this.tabList = new ArrayList<TabInfo>();
+            initialTabs = new ArrayList<TabInfo>();
             TabInfo errorTab = new TabInfo("Error", "");
             errorTab.appendContent(MainWindow.errorHtml);
-            this.tabList.add(errorTab);
-
-            // displayTabs will get called from our asynchronous handler, and we always want to update our boilerplate
-            this.updateDisplayedTabs = true;
+            initialTabs.add(errorTab);
         }
 
-        displayTabs();
+        updateTabs(initialTabs);
     }
 
     /**
-     * Takes our tab configuration and displays it in the main window
+     * see if our current tab set (number + titles) matches the updated tab set
      */
-    private void displayTabs() {
-        assert (this.tabList != null) : "we should always have a tab list populated by the time we reach displayTabs";
+    private boolean canReuseTabSpecs(List<TabInfo> newTabs) {
+        if (this.currentTabs == null) {
+            return false;
+        }
+
+        if (this.currentTabs.size() != newTabs.size()) {
+            return false;
+        }
+
+        for (int tabIndex = 0; tabIndex < newTabs.size(); tabIndex++) {
+            // All we care about for the purposes of reusing TabSpecs is title equality.
+            if (!newTabs.get(tabIndex).getName().equals(this.currentTabs.get(tabIndex).getName())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates our internal tab configuration, and refreshes their display in the main window as necessary
+     */
+    private void updateTabs(List<TabInfo> newTabs) {
+        assert (newTabs != null) : "newTabs must be non-null";
 
         TabHost tabHost = getTabHost();
 
-        // TODO: we can be smarter about seeing if we have new tabs or just new content
-        int currentTab = tabHost.getCurrentTab();
+        if (canReuseTabSpecs(newTabs)) {
+            // we don't need to clear and repopulate the TabHost's list, we can just update the contents
+            // unfortunately the only way to enumerate over the tab list is through setCurrent/getCurrent
+            int savedTabIndex = tabHost.getCurrentTab();
 
-        // Android has a bug where it will Null-ref if you don't call setCurrentTab(0) before clearAllTabs
-        // http://code.google.com/p/android/issues/detail?id=2772
-        tabHost.setCurrentTab(0);
-        tabHost.clearAllTabs();
-        for (TabInfo tab : this.tabList) {
-            addBrowserTab(tabHost, tab.getName(), tab.getContent());
-        }
+            for (int tabIndex = 0; tabIndex < newTabs.size(); tabIndex++) {
+                tabHost.setCurrentTab(tabIndex);
+                BrowserActivity currentTab = (BrowserActivity)this.getCurrentTab();
+                currentTab.updateHtmlContent(newTabs.get(tabIndex).getContent());
+            }
 
-        // now reset the active tab
-        if (this.tabList.size() > currentTab) {
-            tabHost.setCurrentTab(currentTab);
+            // now reset the active tab
+            tabHost.setCurrentTab(savedTabIndex);
         }
+        else {
+            currentTagVersion++;
+
+            // Android has a bug where it will Null-ref if you don't call setCurrentTab(0) before clearAllTabs
+            // http://code.google.com/p/android/issues/detail?id=2772
+            tabHost.setCurrentTab(0);
+
+            // though there's still a race condition in onFocusChanged, so try a few times as a temporary workaround
+            boolean clearTabs = true;
+            int retriesRemaining = 5;
+            while (clearTabs && retriesRemaining > 0) {
+                try {
+                    tabHost.clearAllTabs();
+                    clearTabs = false;
+                }
+                catch (NullPointerException e) {
+                    retriesRemaining--;
+                }
+            }
+
+            for (TabInfo tab : newTabs) {
+                addBrowserTab(tabHost, tab.getName(), tab.getContent());
+            }
+        }
+        
+        // finally, cache the set of tabs
+        this.currentTabs = newTabs;
     }
 
     private void addBrowserTab(TabHost tabHost, String tabName, String tabContent) {
-        TabSpec tabSpec = tabHost.newTabSpec(tabName);
+        // append currentTagVersion to our TabSpec's tag name so that Android will always redraw the contents
+        TabSpec tabSpec = tabHost.newTabSpec(tabName + Integer.toString(currentTagVersion));
         tabSpec.setIndicator(tabName);
         Intent intent = new Intent(this, BrowserActivity.class);
         intent.putExtra(BrowserActivity.EXTRA_HTML_INTENT, tabContent);
@@ -175,18 +223,18 @@ public class MainWindow extends ApplabTabActivity {
 
         this.progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
         this.progressDialog.show();
-        Log.i(TAG, "updating tab data...");
 
         // and call our common refresh data (which will bring down the dialog when we are complete)
         this.dataCollector.backgroundRefresh();
     }
 
     /**
-     * Called when the device orientation changes to save tab data
+     * Called when the device orientation changes to save our current tab data. This allows to to avoid hitting local
+     * storage on orientation changes.
      */
     @Override
     public Object onRetainNonConfigurationInstance() {
-        return this.tabList;
+        return this.currentTabs;
     }
 
     /**
