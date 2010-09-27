@@ -12,7 +12,6 @@ the License.
 
 package applab.pulse.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -81,18 +80,7 @@ public class MainWindow extends ApplabTabActivity {
         this.dataCollector = new PulseDataCollector(new Handler() {
             @Override
             public void handleMessage(Message message) {
-                // if we are showing a progress dialog, we can remove it
-                if (progressDialog != null) {
-                    progressDialog.cancel();
-                    progressDialog = null;
-                }
-
-                locate.cancel();
-
-                // update our tab list if we've received new data from the server
-                if (message.what == PulseDataCollector.UPDATES_DETECTED) {
-                    updateTabs(dataCollector.getTabList());
-                }
+                handleDataCollectorMessage(message);
             }
         });
         TabHost tabHost = this.getTabHost();
@@ -106,19 +94,40 @@ public class MainWindow extends ApplabTabActivity {
         List<TabInfo> initialTabs = (List<TabInfo>)getLastNonConfigurationInstance();
 
         if (initialTabs == null) {
-            // TODO: check our local storage for tab information from the previous run
+            // check our local storage for tab information from the previous run
+            initialTabs = TabInfo.load();
 
+            if (initialTabs.size() == 0) {
+                // As a workaround for an android bug where the touch screen will crash the tab host if there are no
+                // tabs available, we setup a temporary tab.
+                TabInfo errorTab = new TabInfo("Error", "");
+                errorTab.appendContent(MainWindow.errorHtml);
+                initialTabs.add(errorTab);
+            }
+            
+            // and kick off a request to the server to make sure our information is up to date
             refreshTabData();
-
-            // As a workaround for an android bug where the touch screen will crash the tab host if there are no tabs
-            // available, we setup a temporary tab.
-            initialTabs = new ArrayList<TabInfo>();
-            TabInfo errorTab = new TabInfo("Error", "");
-            errorTab.appendContent(MainWindow.errorHtml);
-            initialTabs.add(errorTab);
         }
 
         updateTabs(initialTabs);
+    }
+
+    /**
+     * UI handler that processes messages sent by PulseDataCollector
+     */
+    private void handleDataCollectorMessage(Message message) {
+        // if we are showing a progress dialog, we can remove it
+        if (this.progressDialog != null) {
+            this.progressDialog.cancel();
+            this.progressDialog = null;
+        }
+
+        this.locate.cancel();
+
+        // update our tab list if we've received new data from the server
+        if (message.what == PulseDataCollector.UPDATES_DETECTED) {
+            updateTabs(this.dataCollector.getTabList());
+        }
     }
 
     /**
@@ -189,9 +198,13 @@ public class MainWindow extends ApplabTabActivity {
                 addBrowserTab(tabHost, tab.getName(), tab.getContent());
             }
         }
-        
+
         // finally, cache the set of tabs
         this.currentTabs = newTabs;
+        
+        // and save them for a future session
+        // TODO: can we optimize this out to onDestroy? Does it matter?
+        TabInfo.save(this.currentTabs);
     }
 
     private void addBrowserTab(TabHost tabHost, String tabName, String tabContent) {

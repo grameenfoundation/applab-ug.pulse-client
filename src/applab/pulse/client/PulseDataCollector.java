@@ -39,6 +39,9 @@ public class PulseDataCollector {
     private final static String NAME_ATTRIBUTE = "name";
     private final static String HASH_ATTRIBUTE = "hash";
 
+    /** Network connection and read timeout **/
+    private static final int NETWORK_TIMEOUT = 30000;
+
     /**
      * Class constructor
      * 
@@ -69,8 +72,8 @@ public class PulseDataCollector {
 
         // setup our HTTP client
         HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setSoTimeout(httpParameters, Global.TIMEOUT);
-        HttpConnectionParams.setConnectionTimeout(httpParameters, Global.TIMEOUT);
+        HttpConnectionParams.setSoTimeout(httpParameters, NETWORK_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(httpParameters, NETWORK_TIMEOUT);
         this.httpClient = new DefaultHttpClient(httpParameters);
 
         try {
