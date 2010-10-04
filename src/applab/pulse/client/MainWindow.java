@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import applab.client.AboutDialog;
 import applab.client.ApplabTabActivity;
 import applab.client.BrowserActivity;
 
@@ -104,7 +105,7 @@ public class MainWindow extends ApplabTabActivity {
                 errorTab.appendContent(MainWindow.errorHtml);
                 initialTabs.add(errorTab);
             }
-            
+
             // and kick off a request to the server to make sure our information is up to date
             refreshTabData();
         }
@@ -201,7 +202,7 @@ public class MainWindow extends ApplabTabActivity {
 
         // finally, cache the set of tabs
         this.currentTabs = newTabs;
-        
+
         // and save them for a future session
         // TODO: can we optimize this out to onDestroy? Does it matter?
         TabInfo.save(this.currentTabs);
@@ -213,6 +214,7 @@ public class MainWindow extends ApplabTabActivity {
         tabSpec.setIndicator(tabName);
         Intent intent = new Intent(this, BrowserActivity.class);
         intent.putExtra(BrowserActivity.EXTRA_HTML_INTENT, tabContent);
+        intent.putExtra("enableJavaScript", false);
         tabSpec.setContent(intent);
         tabHost.addTab(tabSpec);
     }
@@ -278,7 +280,8 @@ public class MainWindow extends ApplabTabActivity {
                 refreshTabData();
                 return true;
             case ABOUT_ID:
-                startActivity(new Intent(getApplicationContext(), About.class));
+                AboutDialog.show(this, getString(R.string.app_version), getString(R.string.app_name),
+                        getString(R.string.release_date), getString(R.string.info), R.drawable.icon);
                 return true;
             case SETTINGS_ID:
                 startActivity(new Intent(getApplicationContext(), Settings.class));
