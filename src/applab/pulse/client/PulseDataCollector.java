@@ -117,7 +117,7 @@ public class PulseDataCollector {
         }
         HttpPost httpPost = new HttpPost(baseServerUrl + "/pulse/getTabs");
         httpPost.addHeader("Content-Type", "text/xml");
-        httpPost.addHeader("x-Imei", imei);
+        HttpHelpers.addCommonHeaders(httpPost);
 
         XmlEntityBuilder postBody = new XmlEntityBuilder();
         postBody.writeStartElement("GetTabsRequest", NAMESPACE);
