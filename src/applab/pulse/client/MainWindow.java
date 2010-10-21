@@ -28,8 +28,10 @@ import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import applab.client.AboutDialog;
+import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
 import applab.client.BrowserActivity;
+import applab.search.client.R;
 
 /**
  * Activity that is displayed at startup time. This activity is responsible for dynamically determining the tabs to
@@ -77,7 +79,10 @@ public class MainWindow extends ApplabTabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
+        // Set the app version
+        ApplabActivity.setAppVersion(this.getString(R.string.app_version));
+        
         this.dataCollector = new PulseDataCollector(new Handler() {
             @Override
             public void handleMessage(Message message) {
