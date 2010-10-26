@@ -31,7 +31,6 @@ import applab.client.AboutDialog;
 import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
 import applab.client.BrowserActivity;
-import applab.search.client.R;
 
 /**
  * Activity that is displayed at startup time. This activity is responsible for dynamically determining the tabs to
