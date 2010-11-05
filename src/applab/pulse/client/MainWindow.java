@@ -218,7 +218,7 @@ public class MainWindow extends ApplabTabActivity {
         tabSpec.setIndicator(tabName);
         Intent intent = new Intent(this, BrowserActivity.class);
         intent.putExtra(BrowserActivity.EXTRA_HTML_INTENT, tabContent);
-        intent.putExtra("enableJavaScript", false);
+        intent.putExtra("enableJavascriptInterface", false);
         tabSpec.setContent(intent);
         tabHost.addTab(tabSpec);
     }
