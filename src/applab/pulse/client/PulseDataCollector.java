@@ -2,12 +2,14 @@ package applab.pulse.client;
 
 import applab.client.*;
 
+import java.io.InputStream;
 import java.util.*;
 
 import javax.xml.parsers.*;
 
 import org.apache.http.client.*;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.params.*;
@@ -115,9 +117,9 @@ public class PulseDataCollector {
         if (baseServerUrl.endsWith("/")) {
             baseServerUrl = baseServerUrl.substring(0, baseServerUrl.length() - 1);
         }
-        HttpPost httpPost = new HttpPost(baseServerUrl + "/pulse/getTabs");
+        /*HttpPost httpPost = new HttpPost(baseServerUrl + "/pulse/getTabs");
         httpPost.addHeader("Content-Type", "text/xml");
-        HttpHelpers.addCommonHeaders(httpPost);
+        HttpHelpers.addCommonHeaders(httpPost);*/
 
         XmlEntityBuilder postBody = new XmlEntityBuilder();
         postBody.writeStartElement("GetTabsRequest", NAMESPACE);
@@ -131,11 +133,14 @@ public class PulseDataCollector {
         postBody.writeEndElement();
 
         try {
-            httpPost.setEntity(postBody.getEntity());
+            /*httpPost.setEntity(postBody.getEntity());
             BasicHttpResponse httpResponse = (BasicHttpResponse)httpClient.execute(httpPost);
+            HttpHelpers.postXmlRequest(baseServerUrl + "/pulse/getTabs", postBody.getEntity());*/
             this.xmlParser.reset();
             GetTabsResponseHandler handler = new GetTabsResponseHandler(this.tabs);
-            this.xmlParser.parse(httpResponse.getEntity().getContent(), handler);
+            //this.xmlParser.parse(httpResponse.getEntity().getContent(), handler);
+            InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs", (StringEntity)postBody.getEntity());
+            this.xmlParser.parse(response, handler);
             if (handler.getHasUpdatedTabs()) {
                 this.tabs = handler.getUpdatedTabs();
                 downloadResponse = UPDATES_DETECTED;

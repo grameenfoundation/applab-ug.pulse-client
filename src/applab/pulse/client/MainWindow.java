@@ -22,6 +22,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -114,6 +115,8 @@ public class MainWindow extends ApplabTabActivity {
             refreshTabData();
         }
 
+        
+        
         updateTabs(initialTabs);
     }
 
@@ -255,7 +258,7 @@ public class MainWindow extends ApplabTabActivity {
     public Object onRetainNonConfigurationInstance() {
         return this.currentTabs;
     }
-
+    
     /**
      * Creates the options menu
      * 
@@ -291,7 +294,7 @@ public class MainWindow extends ApplabTabActivity {
                 startActivity(new Intent(getApplicationContext(), Settings.class));
                 return true;
             case EXIT_ID:
-                this.finish();
+                ApplabActivity.exit();
                 return true;
         }
         return super.onOptionsItemSelected(item);

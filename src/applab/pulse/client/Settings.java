@@ -30,6 +30,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final int DONE_ID = Menu.FIRST;
     private static String cachedServerUrl;
     private static final String defaultServer = "http://ckwapps.applab.org:8888";
+    boolean preferencesRefreshed;
 
     public static String getServerUrl() {
         if (cachedServerUrl == null) {
@@ -53,8 +54,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         if (isValidUrl(textContents)) {
             etp.setText(textContents);
             etp.setSummary(textContents);
+            preferencesRefreshed = true;
             PropertyStorage.getLocal().setValue(KEY_SERVER, textContents);
             cachedServerUrl = textContents;
+            preferencesRefreshed = false;
         }
         else {
             etp.setText((String)etp.getSummary());
@@ -63,7 +66,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        refreshSetting();
+        if(!preferencesRefreshed) {
+            refreshSetting();
+        }
     }
 
     private static boolean isValidUrl(String url) {
