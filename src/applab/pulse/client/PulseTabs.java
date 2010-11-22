@@ -38,7 +38,7 @@ import applab.client.BrowserActivity;
  * display and their contents.
  * 
  */
-public class MainWindow extends ApplabTabActivity {
+public class PulseTabs extends ApplabTabActivity {
     private static final String errorHtml = "<html><body>" + "<h1>Unable to establish a connection</h1>"
             + "<p><strong>Please try again later.</strong></p>" + "</body></html>";
 
@@ -61,7 +61,7 @@ public class MainWindow extends ApplabTabActivity {
     // uniquely identify them over the course of process execution
     private static int currentTagVersion;
 
-    public MainWindow() {
+    public PulseTabs() {
         super();
     }
 
@@ -107,7 +107,7 @@ public class MainWindow extends ApplabTabActivity {
                 // As a workaround for an android bug where the touch screen will crash the tab host if there are no
                 // tabs available, we setup a temporary tab.
                 TabInfo errorTab = new TabInfo("Error", "");
-                errorTab.appendContent(MainWindow.errorHtml);
+                errorTab.appendContent(PulseTabs.errorHtml);
                 initialTabs.add(errorTab);
             }
 
