@@ -15,14 +15,11 @@ package applab.pulse.client;
 import java.util.List;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +29,7 @@ import applab.client.AboutDialog;
 import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
 import applab.client.BrowserActivity;
+import applab.client.location.GpsManager;
 
 /**
  * Activity that is displayed at startup time. This activity is responsible for dynamically determining the tabs to
@@ -47,7 +45,6 @@ public class PulseTabs extends ApplabTabActivity {
     private static final int SETTINGS_ID = Menu.FIRST + 2;
     private static final int EXIT_ID = Menu.FIRST + 3;
 
-    private Locate locate;
     private PulseDataCollector dataCollector;
     private List<TabInfo> currentTabs;
     private ProgressDialog progressDialog;
@@ -79,10 +76,10 @@ public class PulseTabs extends ApplabTabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Set the app version
         ApplabActivity.setAppVersion(this.getString(R.string.app_version));
-        
+
         this.dataCollector = new PulseDataCollector(new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -91,9 +88,6 @@ public class PulseTabs extends ApplabTabActivity {
         });
         TabHost tabHost = this.getTabHost();
         LayoutInflater.from(this).inflate(R.layout.tabs, tabHost.getTabContentView(), true);
-
-        // create Locate object
-        this.locate = new Locate((LocationManager)getSystemService(Context.LOCATION_SERVICE));
 
         // Get saved tab data in case there was a configuration (orientation)
         // change so we don't reload it from the network
@@ -115,8 +109,6 @@ public class PulseTabs extends ApplabTabActivity {
             refreshTabData();
         }
 
-        
-        
         updateTabs(initialTabs);
     }
 
@@ -129,8 +121,6 @@ public class PulseTabs extends ApplabTabActivity {
             this.progressDialog.cancel();
             this.progressDialog = null;
         }
-
-        this.locate.cancel();
 
         // update our tab list if we've received new data from the server
         if (message.what == PulseDataCollector.UPDATES_DETECTED) {
@@ -246,6 +236,8 @@ public class PulseTabs extends ApplabTabActivity {
         this.progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
         this.progressDialog.show();
 
+        GpsManager.getInstance().update();
+        
         // and call our common refresh data (which will bring down the dialog when we are complete)
         this.dataCollector.backgroundRefresh();
     }
@@ -258,7 +250,7 @@ public class PulseTabs extends ApplabTabActivity {
     public Object onRetainNonConfigurationInstance() {
         return this.currentTabs;
     }
-    
+
     /**
      * Creates the options menu
      * 
@@ -298,5 +290,13 @@ public class PulseTabs extends ApplabTabActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        
+        GpsManager.getInstance().onStart(this);
     }
 }
