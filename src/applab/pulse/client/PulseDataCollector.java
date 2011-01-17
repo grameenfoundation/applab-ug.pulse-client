@@ -1,22 +1,25 @@
 package applab.pulse.client;
 
-import applab.client.*;
-
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.http.client.*;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.params.*;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.os.Handler;
+import applab.client.HttpHelpers;
+import applab.client.XmlEntityBuilder;
 
 public class PulseDataCollector {
     // constants used for signaling our handler
@@ -29,20 +32,14 @@ public class PulseDataCollector {
     private Timer timer;
     private final int HOUR = 3600000; // TODO: move to a static class
     private String serverUrlOverride;
-    private String imei;
     private boolean isRefreshing;
 
-    // TODO: should we factor out the HTTP code here into a separate class?
-    private HttpClient httpClient;
     private SAXParser xmlParser;
 
     private final static String NAMESPACE = "http://schemas.applab.org/2010/08/pulse";
     private final static String TAB_ELEMENT_NAME = "Tab";
     private final static String NAME_ATTRIBUTE = "name";
     private final static String HASH_ATTRIBUTE = "hash";
-
-    /** Network connection and read timeout **/
-    private static final int NETWORK_TIMEOUT = 30000;
 
     /**
      * Class constructor
@@ -53,30 +50,19 @@ public class PulseDataCollector {
      *            Handler passed by the UI that should be notified when there is new content to display.
      */
     public PulseDataCollector(Handler handler) {
-        this(handler, null, Handset.getImei());
+        this(handler, null);
     }
 
     /**
      * Overload that takes a server URL and imei for test purposes
      */
-    public PulseDataCollector(Handler handler, String serverUrlOverride, String imei) {
-        if (imei == null) {
-            throw new IllegalArgumentException("imei cannot be null");
-        }
-
+    public PulseDataCollector(Handler handler, String serverUrlOverride) {
         this.handler = handler;
         this.serverUrlOverride = serverUrlOverride;
-        this.imei = imei;
         this.tabs = new ArrayList<TabInfo>();
 
         this.timer = new Timer();
         this.timer.scheduleAtFixedRate(new RefreshTask(this), this.HOUR, this.HOUR);
-
-        // setup our HTTP client
-        HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setSoTimeout(httpParameters, NETWORK_TIMEOUT);
-        HttpConnectionParams.setConnectionTimeout(httpParameters, NETWORK_TIMEOUT);
-        this.httpClient = new DefaultHttpClient(httpParameters);
 
         try {
             this.xmlParser = SAXParserFactory.newInstance().newSAXParser();
@@ -133,12 +119,8 @@ public class PulseDataCollector {
         postBody.writeEndElement();
 
         try {
-            /*httpPost.setEntity(postBody.getEntity());
-            BasicHttpResponse httpResponse = (BasicHttpResponse)httpClient.execute(httpPost);
-            HttpHelpers.postXmlRequest(baseServerUrl + "/pulse/getTabs", postBody.getEntity());*/
             this.xmlParser.reset();
             GetTabsResponseHandler handler = new GetTabsResponseHandler(this.tabs);
-            //this.xmlParser.parse(httpResponse.getEntity().getContent(), handler);
             InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs", (StringEntity)postBody.getEntity());
             this.xmlParser.parse(response, handler);
             if (handler.getHasUpdatedTabs()) {
