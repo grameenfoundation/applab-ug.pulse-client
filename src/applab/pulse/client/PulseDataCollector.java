@@ -119,7 +119,10 @@ public class PulseDataCollector {
         postBody.writeEndElement();
 
         try {
-            this.xmlParser.reset();
+
+            // This line was causing problems on android 2.2 (IDEOS)
+            // this.xmlParser.reset();
+            
             GetTabsResponseHandler handler = new GetTabsResponseHandler(this.tabs);
             InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs", (StringEntity)postBody.getEntity());
             this.xmlParser.parse(response, handler);
