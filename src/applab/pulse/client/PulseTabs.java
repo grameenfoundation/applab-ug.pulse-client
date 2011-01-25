@@ -37,9 +37,7 @@ import applab.client.location.GpsManager;
  * 
  */
 public class PulseTabs extends ApplabTabActivity {
-
-    private static final String SUPPORT_TAB_NAME = "Support";
-
+    
     private static final String errorHtml = "<html><body>" + "<h1>Unable to establish a connection</h1>"
             + "<p><strong>Please try again later.</strong></p>" + "</body></html>";
 
@@ -214,10 +212,7 @@ public class PulseTabs extends ApplabTabActivity {
         tabSpec.setIndicator(tabName);
         Intent intent = new Intent(this, BrowserActivity.class);
 
-        if (tabName.equals(SUPPORT_TAB_NAME)) {
-            intent.putExtra(BrowserActivity.EXTRA_ENABLE_JAVASCRIPT_INTENT, true);
-        }
-
+        intent.putExtra(BrowserActivity.EXTRA_ENABLE_JAVASCRIPT_INTENT, true);
         intent.putExtra(BrowserActivity.EXTRA_HTML_INTENT, tabContent);
         intent.putExtra("enableJavascriptInterface", false);
 
