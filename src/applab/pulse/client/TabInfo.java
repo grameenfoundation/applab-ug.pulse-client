@@ -29,6 +29,9 @@ public class TabInfo {
         return this.name;
     }
 
+    /**
+     * Return the hash of the tab content (used for GetTabs protocol)
+     */
     public String getContentHash() {
         return this.contentHash;
     }

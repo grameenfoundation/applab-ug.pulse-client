@@ -37,7 +37,6 @@ import applab.client.location.GpsManager;
  * 
  */
 public class PulseTabs extends ApplabTabActivity {
-    
     private static final String errorHtml = "<html><body>" + "<h1>Unable to establish a connection</h1>"
             + "<p><strong>Please try again later.</strong></p>" + "</body></html>";
 
@@ -79,7 +78,7 @@ public class PulseTabs extends ApplabTabActivity {
         super.onCreate(savedInstanceState);
 
         // Set the app version
-        ApplabActivity.setAppVersion(this.getString(R.string.app_version));
+        ApplabActivity.setAppVersion(getString(R.string.app_name), getString(R.string.app_version));
 
         this.dataCollector = new PulseDataCollector(new Handler() {
             @Override
@@ -194,7 +193,7 @@ public class PulseTabs extends ApplabTabActivity {
             }
 
             for (TabInfo tab : newTabs) {
-                addBrowserTab(tabHost, tab.getName(), tab.getContent());
+                addBrowserTab(tabHost, tab);
             }
         }
 
@@ -206,14 +205,16 @@ public class PulseTabs extends ApplabTabActivity {
         TabInfo.save(this.currentTabs);
     }
 
-    private void addBrowserTab(TabHost tabHost, String tabName, String tabContent) {
+    private void addBrowserTab(TabHost tabHost, TabInfo tab) {
+        String tabName = tab.getName();
+        
         // append currentTagVersion to our TabSpec's tag name so that Android will always redraw the contents
         TabSpec tabSpec = tabHost.newTabSpec(tabName + Integer.toString(currentTagVersion));
         tabSpec.setIndicator(tabName);
         Intent intent = new Intent(this, BrowserActivity.class);
 
         intent.putExtra(BrowserActivity.EXTRA_ENABLE_JAVASCRIPT_INTENT, true);
-        intent.putExtra(BrowserActivity.EXTRA_HTML_INTENT, tabContent);
+        intent.putExtra(BrowserActivity.EXTRA_HTML_INTENT, tab.getContent());
         intent.putExtra("enableJavascriptInterface", false);
 
         tabSpec.setContent(intent);

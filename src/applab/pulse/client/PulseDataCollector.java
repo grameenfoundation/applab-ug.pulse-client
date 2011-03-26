@@ -103,9 +103,6 @@ public class PulseDataCollector {
         if (baseServerUrl.endsWith("/")) {
             baseServerUrl = baseServerUrl.substring(0, baseServerUrl.length() - 1);
         }
-        /*HttpPost httpPost = new HttpPost(baseServerUrl + "/pulse/getTabs");
-        httpPost.addHeader("Content-Type", "text/xml");
-        HttpHelpers.addCommonHeaders(httpPost);*/
 
         XmlEntityBuilder postBody = new XmlEntityBuilder();
         postBody.writeStartElement("GetTabsRequest", NAMESPACE);
