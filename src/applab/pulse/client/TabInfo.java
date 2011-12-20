@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import applab.client.PropertyStorage;
-import applab.client.pulse.R;
+import applab.pulse.client.R;
 
 public class TabInfo {
     // keys used for property storage
