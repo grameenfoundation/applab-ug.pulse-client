@@ -11,7 +11,7 @@ the License.
  */
 package applab.pulse.client;
 
-import applab.pulse.client.R;
+import applab.client.pulse.R;
 
 public class Global {
     /** Network connection and read timeout **/
