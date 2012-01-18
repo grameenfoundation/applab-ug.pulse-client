@@ -15,27 +15,31 @@ package applab.pulse.client;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
+import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import applab.client.AboutDialog;
 import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
 import applab.client.BrowserActivity;
+import applab.client.autoupdate.ApplicationUpdateManager;
 import applab.client.location.GpsManager;
 import applab.client.pulse.R;
 
 /**
  * Activity that is displayed at startup time. This activity is responsible for dynamically determining the tabs to
  * display and their contents.
- * 
+ *
  */
 public class PulseTabs extends ApplabTabActivity {
     private static final String errorHtml = "<html><body>" + "<h1>Unable to establish a connection</h1>"
@@ -45,6 +49,7 @@ public class PulseTabs extends ApplabTabActivity {
     private static final int REFRESH_ID = Menu.FIRST + 1;
     private static final int SETTINGS_ID = Menu.FIRST + 2;
     private static final int EXIT_ID = Menu.FIRST + 3;
+    private static final int CHECK_FOR_UPDATES_ID = Menu.FIRST + 4;
 
     private PulseDataCollector dataCollector;
     private List<TabInfo> currentTabs;
@@ -53,11 +58,13 @@ public class PulseTabs extends ApplabTabActivity {
     /**
      * a global, increasing value that is appended to TabInfo tags in order to uniquely identify them over the course of
      * process execution.
-     * 
+     *
      * This is necessary because Android will sometimes skip a content refresh if a tag name is unchanged.
      */
     // uniquely identify them over the course of process execution
     private static int currentTagVersion;
+
+    private static boolean serviceStarted;
 
     public PulseTabs() {
         super();
@@ -65,10 +72,10 @@ public class PulseTabs extends ApplabTabActivity {
 
     /**
      * Runs when the application is launched.
-     * 
+     *
      * Responsible for getting and saving a few global settings, and setting up the UI: getting a list of tabs from the
      * dataCollector, and calling dataCollector to load their contents.
-     * 
+     *
      * @param savedInstanceState
      *            Saved state from the last run of the application. We are not using this yet, but we may do so in order
      *            to save the contents of the tabs between application runs.
@@ -77,6 +84,9 @@ public class PulseTabs extends ApplabTabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Start update service
+        tryStartService(ApplabActivity.getGlobalContext());
 
         // Set the app version
         ApplabActivity.setAppVersion(getString(R.string.app_name), getString(R.string.app_version));
@@ -208,7 +218,7 @@ public class PulseTabs extends ApplabTabActivity {
 
     private void addBrowserTab(TabHost tabHost, TabInfo tab) {
         String tabName = tab.getName();
-        
+
         // append currentTagVersion to our TabSpec's tag name so that Android will always redraw the contents
         TabSpec tabSpec = tabHost.newTabSpec(tabName + Integer.toString(currentTagVersion));
         tabSpec.setIndicator(tabName);
@@ -259,7 +269,7 @@ public class PulseTabs extends ApplabTabActivity {
 
     /**
      * Creates the options menu
-     * 
+     *
      */
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
@@ -267,6 +277,7 @@ public class PulseTabs extends ApplabTabActivity {
         menu.add(0, REFRESH_ID, 0, "Refresh").setIcon(R.drawable.refresh);
         menu.add(0, ABOUT_ID, 0, "About").setIcon(R.drawable.about);
         menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(R.drawable.settings);
+        menu.add(0, CHECK_FOR_UPDATES_ID, 0, "Check For Updates").setIcon(R.drawable.update);
         menu.add(0, EXIT_ID, 0, "Exit").setIcon(R.drawable.exit);
 
         return result;
@@ -274,7 +285,7 @@ public class PulseTabs extends ApplabTabActivity {
 
     /**
      * Handles menu item selection.
-     * 
+     *
      * @param item
      *            The selected item.
      */
@@ -294,6 +305,12 @@ public class PulseTabs extends ApplabTabActivity {
             case EXIT_ID:
                 ApplabActivity.exit();
                 return true;
+            case CHECK_FOR_UPDATES_ID:
+                Toast updateToast = Toast.makeText(this.getApplicationContext(), getApplicationContext().getString(R.string.background_update_confirmation),
+                        Toast.LENGTH_LONG);
+                updateToast.show();
+                new ApplicationUpdateManager().runOnce(this.getApplicationContext());
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -304,5 +321,16 @@ public class PulseTabs extends ApplabTabActivity {
         super.onStart();
 
         GpsManager.getInstance().onStart(this);
+    }
+
+    public static void tryStartService(Context context) {
+        if(!serviceStarted) {
+            Intent intent = new Intent();
+            intent.setAction("applab.pulse.client.service.ApplabPulseService");
+            Log.d("BaseSearchActivity", "Starting Applab Pulse Service");
+            context.startService(intent);
+            Log.d("BaseSearchActivity", "Started Applab Pulse Service");
+            serviceStarted = true;
+        }
     }
 }

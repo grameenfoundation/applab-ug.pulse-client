@@ -19,4 +19,5 @@
     <string name="connection_error">Unable to establish a connection</string>
     <string name="empty_response">ERROR: Empty support response</string>
     <string name="new_server_url">Change URL</string>
+    <string name="background_update_confirmation">Application update has been launched. If there are new applications, you will be prompted to install them.</string>
 </resources>
