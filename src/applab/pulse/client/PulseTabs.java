@@ -30,7 +30,7 @@ import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
 import applab.client.BrowserActivity;
 import applab.client.location.GpsManager;
-import applab.pulse.client.R;
+import applab.client.pulse.R;
 
 /**
  * Activity that is displayed at startup time. This activity is responsible for dynamically determining the tabs to
