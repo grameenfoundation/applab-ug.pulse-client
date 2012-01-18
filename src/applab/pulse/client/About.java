@@ -20,7 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import applab.client.*;
-import applab.pulse.client.R;
+import applab.client.pulse.R;
 
 public class About extends ApplabActivity {
     private TextView applicationNameAndVersion;
