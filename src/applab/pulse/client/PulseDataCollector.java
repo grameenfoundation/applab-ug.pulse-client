@@ -20,7 +20,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import android.os.Handler;
 import applab.client.HttpHelpers;
 import applab.client.XmlEntityBuilder;
-import applab.pulse.client.R;
+import applab.client.pulse.R;
 
 public class PulseDataCollector {
     // constants used for signaling our handler

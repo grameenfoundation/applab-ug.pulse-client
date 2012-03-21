@@ -15,7 +15,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import applab.pulse.client.R;
+import applab.client.pulse.R;
 
 public class Locate implements LocationListener, Runnable {
 

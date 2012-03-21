@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      android:versionName="@string/app_version" android:versionCode="2011122000" package="applab.pulse.client">
+      android:versionName="@string/app_version" package="applab.client.pulse" android:versionCode="2012011300">
   <application android:icon="@drawable/icon" android:label="@string/app_name" android:name="applab.client.ApplabApplication">
-    <activity android:name=".PulseTabs" android:configChanges="orientation|keyboardHidden">
+    <activity android:name="applab.pulse.client.PulseTabs" android:configChanges="orientation|keyboardHidden">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <activity android:name=".Settings" android:label="Settings" android:theme="@android:style/Theme.Light" android:configChanges="orientation|keyboardHidden"/>
-    <activity android:name=".About" android:label="About" android:configChanges="orientation|keyboardHidden"/> 
+    <activity android:name="applab.pulse.client.Settings" android:label="Settings" android:theme="@android:style/Theme.Light" android:configChanges="orientation|keyboardHidden"/>
+    <activity android:name="applab.pulse.client.About" android:label="About" android:configChanges="orientation|keyboardHidden"/> 
     <activity android:name="applab.client.BrowserActivity" android:configChanges="orientation|keyboardHidden"/> 
   </application>
-  <uses-sdk android:minSdkVersion="3" />
+  <uses-sdk android:minSdkVersion="3"  android:targetSdkVersion="4" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
