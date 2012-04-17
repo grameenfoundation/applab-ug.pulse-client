@@ -14,6 +14,7 @@ package applab.pulse.client;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.Toast;
 import applab.client.AboutDialog;
 import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
@@ -127,6 +129,22 @@ public class PulseTabs extends ApplabTabActivity {
         if (message.what == PulseDataCollector.UPDATES_DETECTED) {
             updateTabs(this.dataCollector.getTabList());
         }
+
+        else if (message.what == PulseDataCollector.NO_SERVER_CONNECTION) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.connection_error_message))
+                    .setCancelable(false)
+                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
     /**
@@ -208,7 +226,7 @@ public class PulseTabs extends ApplabTabActivity {
 
     private void addBrowserTab(TabHost tabHost, TabInfo tab) {
         String tabName = tab.getName();
-        
+
         // append currentTagVersion to our TabSpec's tag name so that Android will always redraw the contents
         TabSpec tabSpec = tabHost.newTabSpec(tabName + Integer.toString(currentTagVersion));
         tabSpec.setIndicator(tabName);

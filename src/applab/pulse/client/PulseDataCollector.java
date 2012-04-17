@@ -18,14 +18,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.os.Handler;
+import android.widget.Toast;
 import applab.client.HttpHelpers;
 import applab.client.XmlEntityBuilder;
-import applab.client.pulse.R;
 
 public class PulseDataCollector {
     // constants used for signaling our handler
     public final static int NO_UPDATES_DETECTED = 0;
     public final static int UPDATES_DETECTED = 1;
+    public final static int NO_SERVER_CONNECTION = 2;
 
     private final String TAG = "PulseDataCollector";
     private List<TabInfo> tabs;
@@ -115,20 +116,29 @@ public class PulseDataCollector {
             postBody.writeEndElement();
         }
         postBody.writeEndElement();
-
+        GetTabsResponseHandler handler = new GetTabsResponseHandler(this.tabs);
+        
         try {
 
             // This line was causing problems on android 2.2 (IDEOS)
-            // this.xmlParser.reset();
-            
-            GetTabsResponseHandler handler = new GetTabsResponseHandler(this.tabs);
-            InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs", (StringEntity)postBody.getEntity());
+            // this.xmlParser.reset();           
+            InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs",
+                    (StringEntity)postBody.getEntity());
             this.xmlParser.parse(response, handler);
             if (handler.getHasUpdatedTabs()) {
                 this.tabs = handler.getUpdatedTabs();
                 downloadResponse = UPDATES_DETECTED;
             }
         }
+
+        catch (java.net.SocketException exception) {
+            downloadResponse = NO_SERVER_CONNECTION;
+        }
+
+        catch (java.net.UnknownHostException exception) {
+            downloadResponse = NO_SERVER_CONNECTION;
+        }
+
         catch (Exception e) {
             // if we fail in the download process, log and notify that nothing has been updated
             android.util.Log.e(TAG, "Exception:" + e);
