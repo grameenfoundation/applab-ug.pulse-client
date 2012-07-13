@@ -26,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.Toast;
 import applab.client.AboutDialog;
 import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
@@ -40,8 +39,8 @@ import applab.client.pulse.R;
  * 
  */
 public class PulseTabs extends ApplabTabActivity {
-    private static final String errorHtml = "<html><body>" + "<h1>Unable to establish a connection</h1>"
-            + "<p><strong>Please try again later.</strong></p>" + "</body></html>";
+    private String errorHtml = "<html><body><h1>" + getString(R.string.unable_connect) + "</h1>"
+            + "<p><strong>" + getString(R.string.try_later) + "</strong></p>" + "</body></html>";
 
     private static final int ABOUT_ID = Menu.FIRST;
     private static final int REFRESH_ID = Menu.FIRST + 1;
@@ -103,8 +102,8 @@ public class PulseTabs extends ApplabTabActivity {
             if (initialTabs.size() == 0) {
                 // As a workaround for an android bug where the touch screen will crash the tab host if there are no
                 // tabs available, we setup a temporary tab.
-                TabInfo errorTab = new TabInfo("Error", "");
-                errorTab.appendContent(PulseTabs.errorHtml);
+                TabInfo errorTab = new TabInfo(getString(R.string.error), "");
+                errorTab.appendContent(errorHtml);
                 initialTabs.add(errorTab);
             }
 
@@ -132,9 +131,9 @@ public class PulseTabs extends ApplabTabActivity {
 
         else if (message.what == PulseDataCollector.NO_SERVER_CONNECTION) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(getString(R.string.connection_error_message))
+            builder.setMessage(getString(R.string.connection_error))
                     .setCancelable(false)
-                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    .setNeutralButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
@@ -173,7 +172,7 @@ public class PulseTabs extends ApplabTabActivity {
      * Updates our internal tab configuration, and refreshes their display in the main window as necessary
      */
     private void updateTabs(List<TabInfo> newTabs) {
-        assert (newTabs != null) : "newTabs must be non-null";
+        assert (newTabs != null) : getString(R.string.new_not_null);
 
         TabHost tabHost = getTabHost();
 
@@ -282,10 +281,10 @@ public class PulseTabs extends ApplabTabActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
 
-        menu.add(0, REFRESH_ID, 0, "Refresh").setIcon(R.drawable.refresh);
-        menu.add(0, ABOUT_ID, 0, "About").setIcon(R.drawable.about);
-        menu.add(0, SETTINGS_ID, 0, "Settings").setIcon(R.drawable.settings);
-        menu.add(0, EXIT_ID, 0, "Exit").setIcon(R.drawable.exit);
+        menu.add(0, REFRESH_ID, 0, getString(R.string.refresh)).setIcon(R.drawable.refresh);
+        menu.add(0, ABOUT_ID, 0, getString(R.string.about)).setIcon(R.drawable.about);
+        menu.add(0, SETTINGS_ID, 0, getString(R.string.settings)).setIcon(R.drawable.settings);
+        menu.add(0, EXIT_ID, 0, getString(R.string.exit)).setIcon(R.drawable.exit);
 
         return result;
     }

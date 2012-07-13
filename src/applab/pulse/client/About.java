@@ -40,15 +40,15 @@ public class About extends ApplabActivity {
 
         // setup the version
         this.applicationNameAndVersion = (TextView)findViewById(R.id.name_version);
-        this.applicationNameAndVersion.setText(getString(R.string.app_name) + "\nVersion: " + getString(R.string.app_version));
+        this.applicationNameAndVersion.setText(getString(R.string.app_name) + "\n" + getString(R.string.version) +": " + getString(R.string.app_version));
 
         // the release date
         this.releaseDate = (TextView)findViewById(R.id.release);
-        this.releaseDate.setText("Release Date: " + getString(R.string.release_date));
+        this.releaseDate.setText(getString(R.string.release_date_string) + ": " + getString(R.string.release_date));
 
         // Get the phone ID (i.e. IMEI number)
         this.phoneId = (TextView)findViewById(R.id.phone_id);
-        this.phoneId.setText("Phone ID: " + Handset.getImei());
+        this.phoneId.setText(getString(R.string.phone_id) + ": " + Handset.getImei());
 
         this.organizationContactInformation = (TextView)findViewById(R.id.info);
         this.organizationContactInformation.setText(getString(R.string.info));
