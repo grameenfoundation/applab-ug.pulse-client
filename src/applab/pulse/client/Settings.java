@@ -62,7 +62,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         }
         else {
             etp.setText((String)etp.getSummary());
-            Toast.makeText(getApplicationContext(), "Sorry, invalid URL!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.invalid_url), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -87,8 +87,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
 
-        menu.add(0, DONE_ID, 0, "Done").setIcon(R.drawable.done); // TODO add to
-        // strings.xml
+        menu.add(0, DONE_ID, 0, getString(R.string.done)).setIcon(R.drawable.done); 
         return result;
     }
 
