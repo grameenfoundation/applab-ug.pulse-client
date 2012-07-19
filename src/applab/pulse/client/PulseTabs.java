@@ -39,8 +39,7 @@ import applab.client.pulse.R;
  * 
  */
 public class PulseTabs extends ApplabTabActivity {
-    private String errorHtml = "<html><body><h1>" + getString(R.string.unable_connect) + "</h1>"
-            + "<p><strong>" + getString(R.string.try_later) + "</strong></p>" + "</body></html>";
+    private String errorHtml = "";
 
     private static final int ABOUT_ID = Menu.FIRST;
     private static final int REFRESH_ID = Menu.FIRST + 1;
@@ -78,6 +77,8 @@ public class PulseTabs extends ApplabTabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        errorHtml = "<html><body><h1>" + getString(R.string.unable_connect) + "</h1>"
+                + "<p><strong>" + getString(R.string.try_later) + "</strong></p>" + "</body></html>";
 
         // Set the app version
         ApplabActivity.setAppVersion(getString(R.string.app_name), getString(R.string.app_version));
