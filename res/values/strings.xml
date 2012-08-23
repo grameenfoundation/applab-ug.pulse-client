@@ -11,7 +11,7 @@
     <string name="message">Type your support request in the box below and we will get back to you:</string>
     <string name="select_type">Select message type:</string>
     <string name="server_url">Server URL</string>
-    <string name="default_server">http://ckwapps.applab.org:8888</string>   
+    <string name="default_server">http://grameeounfoundation.ckwtest.cs12.force.com</string>   
     <string name="loading">Please wait...</string>
     <string name="downloading_data">Downloading Content</string>
     <string name="cancel">Cancel</string>

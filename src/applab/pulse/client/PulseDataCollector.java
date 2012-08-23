@@ -1,6 +1,7 @@
 package applab.pulse.client;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -121,9 +125,21 @@ public class PulseDataCollector {
         try {
 
             // This line was causing problems on android 2.2 (IDEOS)
-            // this.xmlParser.reset();           
-            InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs",
-                    (StringEntity)postBody.getEntity());
+            // this.xmlParser.reset();         
+        	
+        	// Salesforce doesn't currently support raw http post data, except via it's rest service api, but the rest service api doesn't provide the ability to set the language
+        	// So we'll send a name value pair instead
+        	/*InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs",
+                    (StringEntity)postBody.getEntity());*/
+        	
+        	
+        	//InputStream response = HttpHelpers.postData("data=" + postBody.toString(), new URL(baseServerUrl + "/pulse/getTabs")); 
+        	
+        	List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        	nameValuePairs.add(new BasicNameValuePair("data", postBody.toString()));
+        	
+        	InputStream response = HttpHelpers.postFormRequestAndGetStream(baseServerUrl + "/getTabs",
+        			new UrlEncodedFormEntity(nameValuePairs));
             this.xmlParser.parse(response, handler);
             if (handler.getHasUpdatedTabs()) {
                 this.tabs = handler.getUpdatedTabs();
