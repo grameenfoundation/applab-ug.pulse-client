@@ -1,6 +1,8 @@
 package applab.pulse.client;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +15,13 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 import applab.client.HttpHelpers;
 import applab.client.XmlEntityBuilder;
@@ -94,6 +98,7 @@ public class PulseDataCollector {
      * spec for the details of the GetTabs protocol.
      * 
      * @return The handler signal value (i.e. whether we have updated tabs or not)
+     * @throws UnsupportedEncodingException 
      */
     private int downloadTabUpdates() {
         int downloadResponse = NO_UPDATES_DETECTED;
@@ -116,14 +121,23 @@ public class PulseDataCollector {
             postBody.writeEndElement();
         }
         postBody.writeEndElement();
+        try {
+            Log.d("XML:", postBody.getEntity().toString());
+        }
+        catch (UnsupportedEncodingException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
         GetTabsResponseHandler handler = new GetTabsResponseHandler(this.tabs);
         
         try {
 
             // This line was causing problems on android 2.2 (IDEOS)
-            // this.xmlParser.reset();           
+            // this.xmlParser.reset();      
+            //Log.d(TAG, EntityUtils.toString(postBody.getEntity()));
             InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs",
                     (StringEntity)postBody.getEntity());
+            //Log.d(TAG, new java.util.Scanner(response).useDelimiter("\\A").next());
             this.xmlParser.parse(response, handler);
             if (handler.getHasUpdatedTabs()) {
                 this.tabs = handler.getUpdatedTabs();

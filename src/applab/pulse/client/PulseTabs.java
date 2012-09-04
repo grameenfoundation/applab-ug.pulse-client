@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,6 +83,8 @@ public class PulseTabs extends ApplabTabActivity {
                 + "<p><strong>" + getString(R.string.try_later) + "</strong></p>" + "</body></html>";
 
         // Set the app version
+        Log.d("PulseTAB", getString(R.string.app_version));
+        Log.d("PulseTAB", getString(applab.client.pulse.R.string.app_version));
         ApplabActivity.setAppVersion(getString(R.string.app_name), getString(R.string.app_version));
 
         this.dataCollector = new PulseDataCollector(new Handler() {
