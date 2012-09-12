@@ -1,7 +1,6 @@
 package applab.pulse.client;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,14 +14,12 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.os.Handler;
-import android.widget.Toast;
 import applab.client.HttpHelpers;
 import applab.client.XmlEntityBuilder;
 

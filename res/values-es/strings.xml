@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="app_name">Pulse</string>
-<string name="app_version">4.1.1</string>
-<string name="release_date">May 09, 2012</string>
+<string name="app_version">4.3.pre1</string>
+<string name="release_date">September 04, 2012</string>
 <string name="info">Grameen Foundation, Applab Uganda\nckw@applab.org</string>
 <string name="label">Bienvenido</string>
 <string name="send">Enviar</string>
@@ -11,7 +11,7 @@
 <string name="message">Digite su solicitud de soporte en el campo inferior y le responderemos:</string>
 <string name="select_type">Seleccionar tipo de mensaje:</string>
 <string name="server_url">URL del servidor</string>
-<string name="default_server">http://ckwapps.applab.org:8888</string>
+<string name="default_server">http://grameenfoundation.ckwtest.cs12.force.com/pulse</string>
 <string name="loading">Por favor espere...</string>
 <string name="downloading_data">Descargando contenido</string>
 <string name="cancel">Cancelar</string>
@@ -19,4 +19,18 @@
 <string name="connection_error">No se pudo establecer conexion</string>
 <string name="empty_response">ERROR: Respuesta de soporte vacia</string>
 <string name="new_server_url">Cambiar la URL</string>
+<string name="unable_connect">Por favor intente mas tarde.</string>
+<string name="try_later">Please try again later.</string>
+<string name="error">Error</string>
+<string name="ok">Acceptar</string>
+<string name="new_not_null">Pestañas no inicializadas</string>
+<string name="refresh">Refrescar</string>
+<string name="about">Acerca de</string>
+<string name="settings">Configuración</string>
+<string name="exit">Salir</string>
+<string name="version">Versión</string>
+<string name="release_date_string">Fecha de liberación</string>
+<string name="phone_id">ID del teléfono</string>
+<string name="invalid_url">URL invalida!</string>
+<string name="done">Finalizado</string>
 </resources>
