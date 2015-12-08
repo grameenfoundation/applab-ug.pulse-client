@@ -11,8 +11,8 @@
     android:gravity="center"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="25px"        
-    android:textSize="18px"
+    android:paddingTop="25dp"
+    android:textSize="18sp"
     android:textStyle="bold"  
     android:typeface="sans"  
     android:textColor="@drawable/black" />
@@ -21,10 +21,10 @@
     android:gravity="center"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="5px"
-    android:layout_marginLeft="6px"
-    android:paddingBottom="15px"
-    android:textSize="12px"    
+    android:paddingTop="5dp"
+    android:layout_marginLeft="6dp"
+    android:paddingBottom="15dp"
+    android:textSize="12sp"
     android:typeface="sans"  
     android:textColor="@drawable/black" />
     <TextView
@@ -32,8 +32,8 @@
     android:gravity="center"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"     
-    android:paddingBottom="5px"
-    android:textSize="18px"
+    android:paddingBottom="5dp"
+    android:textSize="18sp"
     android:textStyle="bold"  
     android:typeface="sans"  
     android:textColor="@drawable/black" />
@@ -42,9 +42,9 @@
     android:gravity="center"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="15px"    
-    android:paddingBottom="10px"
-    android:textSize="12px"     
+    android:paddingTop="15dp"
+    android:paddingBottom="10dp"
+    android:textSize="12sp"
     android:typeface="sans"  
     android:textColor="@drawable/black" />
         
@@ -52,11 +52,11 @@
           android:id="@+id/close"
           android:text="@string/close_button"
           android:textColor="@drawable/black"
-          android:textSize="20px"
-          android:layout_marginLeft="120px"
-          android:layout_width="250px"
+          android:textSize="20sp"
+          android:layout_marginLeft="120dp"
+          android:layout_width="250dp"
           android:layout_height="wrap_content" 
-          android:padding="5px"/>
+          android:padding="5dp"/>
   	
  
 </LinearLayout>

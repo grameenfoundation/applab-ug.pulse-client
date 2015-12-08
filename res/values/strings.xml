@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pulse</string>
-    <string name="app_version">4.3.pre1</string>
-    <string name="release_date">September 04, 2012</string>
+    <string name="app_version">5.0.0</string>
+    <string name="release_date">December 08, 2015</string>
 	<string name="info">Grameen Foundation, Applab Uganda\nckw@applab.org</string>
     <string name="label">Welcome</string>
     <string name="send">Send</string>
@@ -11,11 +11,11 @@
     <string name="message">Type your support request in the box below and we will get back to you:</string>
     <string name="select_type">Select message type:</string>
     <string name="server_url">Server URL</string>
-    <string name="default_server">http://grameenfoundation.ckwtest.cs12.force.com/pulse</string>   
-    <string name="loading">Please wait...</string>
+    <string name="default_server">http://grameenfoundation.force.com/pulse</string>
+    <string name="loading">Please wait…</string>
     <string name="downloading_data">Downloading Content</string>
     <string name="cancel">Cancel</string>
-    <string name="submitting">Submitting request. Please wait...</string>
+    <string name="submitting">Submitting request. Please wait…</string>
     <string name="connection_error">Unable to establish a connection</string>
     <string name="empty_response">ERROR: Empty support response</string>
     <string name="new_server_url">Change URL</string>
@@ -33,4 +33,5 @@
     <string name="phone_id">Phone ID</string>
     <string name="invalid_url">Sorry, invalid URL!</string>
     <string name="done">Done</string>
+    <string name="new_notifications">New Pulse Notifications</string>
 </resources>

@@ -2,50 +2,57 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:orientation="vertical"  
     android:layout_height="fill_parent"
     android:background="@drawable/white"
-    >
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/white"
-    >   
-      <TextView
-    android:gravity="center"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="2px"
-    android:paddingBottom="1px"
-    android:textSize="18px"
-    android:textStyle="bold"    
-    android:text="@string/label" />
-<TextView
-    android:gravity="left"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:textColor="@drawable/black"
-    android:paddingTop="1px"
-    android:paddingLeft="6px"
-    android:paddingBottom="6px"
-    android:text="@string/message" />
-    <EditText 
-				android:id="@+id/msg"
-				android:layout_width="fill_parent" 
-				android:layout_height="wrap_content"
-				android:minHeight="80dp">
-			</EditText>
-			<TextView
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:textSize="2pt" />
-           <Button          
-          android:id="@+id/send_button"
-          android:layout_marginLeft="100px"
-          android:textSize="16px"          
-          android:layout_width="300dp"
-          android:layout_height="wrap_content" 
-          android:padding="20px" />
-</LinearLayout>
+    >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/white"
+                  android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="1px"
+            android:paddingTop="2dp"
+            android:text="@string/label"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingBottom="6dp"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:text="@string/message"
+            android:textColor="@drawable/black"/>
+
+        <EditText
+            android:id="@+id/msg"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:minHeight="80dp">
+        </EditText>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="2pt"/>
+
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:padding="20dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
 </ScrollView>

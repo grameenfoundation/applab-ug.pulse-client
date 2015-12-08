@@ -19,7 +19,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
+
 import applab.client.HttpHelpers;
 import applab.client.XmlEntityBuilder;
 
@@ -43,6 +47,8 @@ public class PulseDataCollector {
     private final static String TAB_ELEMENT_NAME = "Tab";
     private final static String NAME_ATTRIBUTE = "name";
     private final static String HASH_ATTRIBUTE = "hash";
+
+    private String notificationMessage;
 
     /**
      * Class constructor
@@ -115,23 +121,12 @@ public class PulseDataCollector {
             attributes.put(HASH_ATTRIBUTE, currentTab.getContentHash());
             postBody.writeStartElement(TAB_ELEMENT_NAME, attributes);
             postBody.writeEndElement();
+            Log.d(PulseDataCollector.class.getSimpleName() + "SentHash", currentTab.getName() + "=" + currentTab.getContentHash());
         }
         postBody.writeEndElement();
         GetTabsResponseHandler handler = new GetTabsResponseHandler(this.tabs);
         
         try {
-
-            // This line was causing problems on android 2.2 (IDEOS)
-            // this.xmlParser.reset();         
-        	
-        	// Salesforce doesn't currently support raw http post data, except via it's rest service api, but the rest service api doesn't provide the ability to set the language
-        	// So we'll send a name value pair instead
-        	/*InputStream response = HttpHelpers.postXmlRequestAndGetStream(baseServerUrl + "/pulse/getTabs",
-                    (StringEntity)postBody.getEntity());*/
-        	
-        	
-        	//InputStream response = HttpHelpers.postData("data=" + postBody.toString(), new URL(baseServerUrl + "/pulse/getTabs")); 
-        	
         	List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         	nameValuePairs.add(new BasicNameValuePair("data", postBody.toString()));
         	
@@ -188,6 +183,34 @@ public class PulseDataCollector {
         refreshThread.start();
     }
 
+    /**
+     * Fetch new data from the server to populate each tab in the tab list. If there are changes,
+     * notify via the statu-bar
+     *
+     * In the future, this method will post a hash of its stored data to the server and the server will only only send
+     * down the data if it has changed.
+     */
+    public void backgroundRefreshWithNotifications(final INotification notificationCallBack) {
+        // first check (under a lock), if a refresh is in progress
+        synchronized (this.timer) {
+            if (this.isRefreshing) {
+                return;
+            }
+            this.isRefreshing = true;
+        }
+        Thread refreshThread = new Thread() {
+            public void run() {
+                int handlerSignal = downloadTabUpdates();
+                if(handlerSignal == UPDATES_DETECTED) {
+                    notificationCallBack.notify(notificationMessage);
+                }
+                signalRefreshComplete(handlerSignal);
+            }
+        };
+
+        refreshThread.start();
+    }
+
     // called when our refresh has completed
     private void signalRefreshComplete(int handlerSignal) {
         synchronized (this.timer) {
@@ -213,13 +236,21 @@ public class PulseDataCollector {
 
         public GetTabsResponseHandler(List<TabInfo> currentTabs) {
             // assume tabs are updating unless told otherwise
+            notificationMessage = null;
             this.hasUpdatedTabs = true;
             this.updatedTabs = new ArrayList<TabInfo>();
             if (currentTabs != null) {
                 this.currentTabMapping = new HashMap<String, TabInfo>();
                 for (TabInfo currentTab : currentTabs) {
+                    Log.d(PulseDataCollector.class.getSimpleName() + "ReceivedHash", currentTab.getName() + "=" + currentTab.getContentHash());
                     this.currentTabMapping.put(currentTab.getName(), currentTab);
+                    if(currentTab.getName().toLowerCase().contains("message")) {
+                        notificationMessage = currentTab.getContent();
+                    }
                 }
+            }
+            else {
+                Log.d(PulseDataCollector.class.getSimpleName(), "no tabs returned");
             }
         }
 

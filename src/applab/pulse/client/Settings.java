@@ -30,7 +30,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static String KEY_SERVER = "server";
     public static final int DONE_ID = Menu.FIRST;
     private static String cachedServerUrl;
-    private static final String defaultServer = "http://ckwapps.applab.org:8888";
+    private static final String defaultServer = "http://grameenfoundation.force.com/pulse";
     boolean preferencesRefreshed;
 
     public static String getServerUrl() {

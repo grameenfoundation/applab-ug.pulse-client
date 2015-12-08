@@ -12,10 +12,10 @@ the License.
 
 package applab.pulse.client;
 
-import java.util.List;
-
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +26,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+
+import java.util.List;
+
 import applab.client.AboutDialog;
 import applab.client.ApplabActivity;
 import applab.client.ApplabTabActivity;
@@ -49,6 +52,7 @@ public class PulseTabs extends ApplabTabActivity {
     private PulseDataCollector dataCollector;
     private List<TabInfo> currentTabs;
     private ProgressDialog progressDialog;
+    private NotificationManager mNotificationManager;
 
     /**
      * a global, increasing value that is appended to TabInfo tags in order to uniquely identify them over the course of
@@ -77,7 +81,10 @@ public class PulseTabs extends ApplabTabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        getSharedPreferences("preferences.xml", MODE_MULTI_PROCESS);
+
         errorHtml = "<html><body><h1>" + getString(R.string.unable_connect) + "</h1>"
                 + "<p><strong>" + getString(R.string.try_later) + "</strong></p>" + "</body></html>";
 
@@ -107,6 +114,10 @@ public class PulseTabs extends ApplabTabActivity {
                 TabInfo errorTab = new TabInfo(getString(R.string.error), "");
                 errorTab.appendContent(errorHtml);
                 initialTabs.add(errorTab);
+            }
+            else {
+                //clear notification since now it has been viewed
+                mNotificationManager.cancel(ConnectionService.NOTIFICATION_ID);
             }
 
             // and kick off a request to the server to make sure our information is up to date
@@ -186,7 +197,9 @@ public class PulseTabs extends ApplabTabActivity {
             for (int tabIndex = 0; tabIndex < newTabs.size(); tabIndex++) {
                 tabHost.setCurrentTab(tabIndex);
                 BrowserActivity currentTab = (BrowserActivity)this.getCurrentTab();
-                currentTab.updateHtmlContent(newTabs.get(tabIndex).getContent());
+                if(currentTab != null) {
+                    currentTab.updateHtmlContent(newTabs.get(tabIndex).getContent());
+                }
             }
 
             // now reset the active tab

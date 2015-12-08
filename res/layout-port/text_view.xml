@@ -1,63 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:background="@drawable/white"
-  android:orientation="vertical">
-  
-  <TextView
-  	android:id="@+id/name_version"
-    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="50px"    
-    android:paddingBottom="3px"
-    android:textSize="18px"
-    android:textStyle="bold"  
-    android:typeface="sans"  
-    android:textColor="@drawable/black" />
+    android:layout_height="fill_parent"
+    android:background="@drawable/white"
+    android:orientation="vertical">
+
     <TextView
-  	android:id="@+id/release"
-    android:gravity="center"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10px"
-    android:layout_marginLeft="6px"
-    android:paddingBottom="30px"
-    android:textSize="12px"    
-    android:typeface="sans"  
-    android:textColor="@drawable/black" />
+        android:id="@+id/name_version"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="3dp"
+        android:paddingTop="50dp"
+        android:textColor="@drawable/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:typeface="sans"/>
+
     <TextView
-  	android:id="@+id/phone_id"
-    android:gravity="center"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"     
-    android:paddingBottom="10px"
-    android:textSize="18px"
-    android:textStyle="bold"  
-    android:typeface="sans"  
-    android:textColor="@drawable/black" />
+        android:id="@+id/release"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:gravity="center"
+        android:paddingBottom="30dp"
+        android:paddingTop="10dp"
+        android:textColor="@drawable/black"
+        android:textSize="12sp"
+        android:typeface="sans"/>
+
     <TextView
-  	android:id="@+id/info"
-    android:gravity="center"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="30px"    
-    android:paddingBottom="20px"
-    android:textSize="12px"     
-    android:typeface="sans"  
-    android:textColor="@drawable/black" />
-        
-          <Button
-          android:id="@+id/close"
-          android:text="@string/close_button"
-          android:textColor="@drawable/black"
-          android:textSize="20px"
-          android:layout_marginLeft="40px"
-          android:layout_width="250px"
-          android:layout_height="wrap_content" 
-          android:padding="10px"/>
-  	
- 
+        android:id="@+id/phone_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:textColor="@drawable/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:typeface="sans"/>
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:paddingTop="30dp"
+        android:textColor="@drawable/black"
+        android:textSize="12sp"
+        android:typeface="sans"/>
+
+    <Button
+        android:id="@+id/close"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:padding="10dp"
+        android:text="@string/close_button"
+        android:textColor="@drawable/black"
+        android:textSize="20sp"/>
+
 </LinearLayout>
